@@ -4,7 +4,11 @@ import { Container, Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 
 function App() {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [data, setData] = useState();
   return (
     <Container>
@@ -13,18 +17,36 @@ function App() {
         <Form.Group className="mb-3">
           <Form.Label>Email address</Form.Label>
           <Form.Control
-            {...register("email")}
+            {...register("email", {
+              required: "required",
+              pattern: {
+                value: /\S+@\S+\.\S+/,
+                message: "รูปแบบของอีเมล์ไม่ถูกต้อง",
+              },
+            })}
             type="email"
             placeholder="Enter email"
           ></Form.Control>
+          <Form.Text className="text-danger">
+            {errors.email?.message}
+          </Form.Text>
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>Password</Form.Label>
           <Form.Control
-            {...register("password")}
+            {...register("password", {
+              required: "required",
+              minLength: {
+                value: 8,
+                message: "รหัสผ่านต้องมีความยาว 8 ตัวอักษรขึ้นไป",
+              },
+            })}
             type="password"
             placeholder="Enter password"
           />
+          <Form.Text className="text-danger">
+            {errors.password?.message}
+          </Form.Text>
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>ประเภทสมาชิก</Form.Label>
